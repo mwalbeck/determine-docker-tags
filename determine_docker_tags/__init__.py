@@ -32,6 +32,8 @@ def determine_tags(version_string, app_env, include_major):
 
 
 def write_tags_to_file(tags):
+    print(tags)
+
     with open(".tags", "w") as file:
         file.write(tags)
 
