@@ -1,0 +1,39 @@
+---
+kind: pipeline
+type: docker
+name: python-3-8-tests
+
+steps:
+  - name: run tests
+    image: mwalbeck/python-poetry:1.1-3.8
+    environment:
+      APP_DIR: determine_docker_tags
+      POETRY_VIRTUALENVS_CREATE: "false"
+    commands:
+      - poetry install
+      - black --check $${APP}
+      - flake8 $${APP}
+
+trigger:
+  event:
+    - pull_request
+
+---
+kind: pipeline
+type: docker
+name: python-3-9-tests
+
+steps:
+  - name: run tests
+    image: mwalbeck/python-poetry:1.1-3.9
+    environment:
+      APP_DIR: determine_docker_tags
+      POETRY_VIRTUALENVS_CREATE: "false"
+    commands:
+      - poetry install
+      - black --check $${APP}
+      - flake8 $${APP}
+
+trigger:
+  event:
+    - pull_request
