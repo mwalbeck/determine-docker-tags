@@ -5,13 +5,16 @@ import re
 from datetime import date
 
 
-def determine_tags(version_string, app_env, include_major):
+def determine_tags(version_string, app_env, include_major, include_extra_info):
     tags = ""
 
     if "-" in version_string:
         extra_info = version_string[version_string.find("-") :]
         version_string = version_string[: version_string.find("-")]
     else:
+        extra_info = ""
+
+    if include_extra_info == "no":
         extra_info = ""
 
     if app_env:
@@ -39,13 +42,13 @@ def write_tags_to_file(tags):
 
 
 def main():
-    # app_name = os.environ("APP_NAME")
     version_type = os.getenv("VERSION_TYPE", "")  # docker_env, docker_from or date
     app_name = os.getenv("APP_NAME", "")
     dockerfile_path = os.getenv("DOCKERFILE_PATH", "Dockerfile")
     app_env = os.getenv("APP_ENV", "")
     custom_tags = os.getenv("CUSTOM_TAGS", "")
-    include_major = os.getenv("INCLUDE_MAJOR", "yes")
+    include_major = os.getenv("INCLUDE_MAJOR", "yes")  # yes or no
+    include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "yes")  # yes or no
 
     if version_type == "docker_env":
         with open(dockerfile_path) as dockerfile:
@@ -57,7 +60,9 @@ def main():
         if version_string[0] == "v":
             version_string = version_string[1:]
 
-        tags = determine_tags(version_string, app_env, include_major)
+        tags = determine_tags(
+            version_string, app_env, include_major, include_extra_info
+        )
 
     elif version_type == "docker_from":
         with open(dockerfile_path) as dockerfile:
@@ -69,7 +74,9 @@ def main():
         if "@" in version_string:
             version_string = version_string[: version_string.find("@")]
 
-        tags = determine_tags(version_string, app_env, include_major)
+        tags = determine_tags(
+            version_string, app_env, include_major, include_extra_info
+        )
 
     elif version_type == "date":
         version_string = date.today().strftime("%Y%m%d")
