@@ -50,6 +50,16 @@ def main():
     include_major = os.getenv("INCLUDE_MAJOR", "yes")  # yes or no
     include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "yes")  # yes or no
 
+    if include_major == "postive":
+        include_major = "yes"
+    elif include_major == "negative":
+        include_major = "no"
+
+    if include_extra_info == "postive":
+        include_extra_info = "yes"
+    elif include_extra_info == "negative":
+        include_extra_info = "no"
+
     if version_type == "docker_env":
         with open(dockerfile_path) as dockerfile:
             for line in dockerfile:
