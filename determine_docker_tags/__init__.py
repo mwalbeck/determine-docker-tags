@@ -41,6 +41,13 @@ def write_tags_to_file(tags):
         file.write(tags)
 
 
+def is_app_name_empty(app_name):
+    if not app_name or app_name.isspace():
+        raise ValueError(
+            "APP_NAME is required when VERSION_TYPE is docker_env or docker_from"
+        )
+
+
 def main():
     version_type = os.getenv("VERSION_TYPE", "")  # docker_env, docker_from or date
     app_name = os.getenv("APP_NAME", "")
@@ -61,6 +68,8 @@ def main():
         include_extra_info = "no"
 
     if version_type == "docker_env":
+        is_app_name_empty(app_name)
+
         with open(dockerfile_path) as dockerfile:
             for line in dockerfile:
                 if re.search(rf"ENV {app_name}_VERSION .*", line):
@@ -75,6 +84,8 @@ def main():
         )
 
     elif version_type == "docker_from":
+        is_app_name_empty(app_name)
+
         with open(dockerfile_path) as dockerfile:
             for line in dockerfile:
                 if re.search(rf"FROM {app_name}:.*", line):
@@ -97,6 +108,7 @@ def main():
         custom_tags = ""
 
     else:
+        print("Please specify a VERSION_TYPE or set CUSTOM_TAGS.")
         exit(-1)
 
     if custom_tags:
