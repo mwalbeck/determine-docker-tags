@@ -16,15 +16,15 @@ pip install determine-docker-tags
 
 Here is a list of the options available. You can find more detailed usage instructions below.
 
-| ENV Var            | Default      | Description                                                                                                                                                                                          |
-| ------------------ | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| VERSION_TYPE       | ""           | How the program should find the version number. Can be "docker_env", "docker_from", "date" or "".                                                                                                    |
-| APP_NAME           | ""           | The name of the application whose version number you want to use to generate tags.                                                                                                                   |
-| DOCKERFILE_PATH    | "Dockerfile" | The path to the Dockerfile you want to run the program on                                                                                                                                            |
-| APP_ENV            | ""           | A static string to add to the end of every tag with a "-" added inbetween the tag and the string. The string will not be added to any tags defined in CUSTOM_TAGS.                                   |
-| CUSTOM_TAGS        | ""           | Any extra static tags you want to add to the image, for example "latest". You can provide a list in the form of a comma separated string to specify multiple tags. For example "latest,prod,example" |
-| INCLUDE_MAJOR      | "yes"        | If the major version number should be a tag. This setting will be ignored if the major version number is 0. Can be "yes" or "no".                                                                    |
-| INCLUDE_EXTRA_INFO | "yes"        | If the extra information that you find after the version number in many docker image tags should be kept and added to every tag. Can be "yes" or "no"                                                |
+| ENV Var         | Default      | Description                                                                                                                                                                                          |
+| --------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| VERSION_TYPE    | ""           | How the program should find the version number. Can be "docker_env", "docker_from", "date" or "".                                                                                                    |
+| APP_NAME        | ""           | The name of the application whose version number you want to use to generate tags.                                                                                                                   |
+| DOCKERFILE_PATH | "Dockerfile" | The path to the Dockerfile you want to run the program on                                                                                                                                            |
+| APP_ENV         | ""           | A static string to add to the end of every tag with a "-" added inbetween the tag and the string. The string will not be added to any tags defined in CUSTOM_TAGS.                                   |
+| CUSTOM_TAGS     | ""           | Any extra static tags you want to add to the image, for example "latest". You can provide a list in the form of a comma separated string to specify multiple tags. For example "latest,prod,example" |
+| INCLUDE_MAJOR   | "yes"        | If the major version number should be a tag. This setting will be ignored if the major version number is 0. Can be "yes" or "no".                                                                    |
+| INCLUDE_SUFFIX  | "yes"        | If the suffix that you find after the version number in many docker image tags should be kept and added to every tag. Can be "yes" or "no"                                                           |
 
 ## Usage
 
@@ -88,9 +88,9 @@ We then set `APP_NAME` to `nginx` and the generated tags would be:
 1.18,1.18.0
 ```
 
-### INCLUDE_EXTRA_INFO
+### INCLUDE_SUFFIX
 
-`INCLUDE_EXTRA_INFO` is mainly intended to be used with the `docker_from` version type. It determines whether or not the suffix should be included in the generated tags. The default for this option is `yes`. Let's say we had the following `FROM` instruction in our Dockerfile:
+`INCLUDE_SUFFIX` is mainly intended to be used with the `docker_from` version type. It determines whether or not the suffix should be included in the generated tags. The default for this option is `yes`. Let's say we had the following `FROM` instruction in our Dockerfile:
 
 ```
 FROM nginx:1.18.0-alpine

@@ -5,7 +5,7 @@ import re
 from datetime import date
 
 
-def determine_tags(version_string, app_env, include_major, include_extra_info):
+def determine_tags(version_string, app_env, include_major, include_suffix):
     tags = ""
 
     if "-" in version_string:
@@ -14,7 +14,7 @@ def determine_tags(version_string, app_env, include_major, include_extra_info):
     else:
         extra_info = ""
 
-    if include_extra_info == "no":
+    if include_suffix == "no":
         extra_info = ""
 
     if app_env:
@@ -55,17 +55,24 @@ def main():
     app_env = os.getenv("APP_ENV", "")
     custom_tags = os.getenv("CUSTOM_TAGS", "")
     include_major = os.getenv("INCLUDE_MAJOR", "yes")  # yes or no
-    include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "yes")  # yes or no
+    include_suffix = os.getenv("INCLUDE_SUFFIX", "yes")  # yes or no
+    include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "")  # DEPRECATED
+
+    if include_extra_info and not include_extra_info.isspace():
+        print(
+            "DEPRECATION NOTICE: INCLUDE_EXTRA_INFO is deprecated. Please use INCLUDE_SUFFIX instead."
+        )
+        include_suffix = include_extra_info
 
     if include_major == "positive":
         include_major = "yes"
     elif include_major == "negative":
         include_major = "no"
 
-    if include_extra_info == "positive":
-        include_extra_info = "yes"
-    elif include_extra_info == "negative":
-        include_extra_info = "no"
+    if include_suffix == "positive":
+        include_suffix = "yes"
+    elif include_suffix == "negative":
+        include_suffix = "no"
 
     if version_type == "docker_env":
         is_app_name_empty(app_name)
@@ -79,9 +86,7 @@ def main():
         if version_string[0] == "v":
             version_string = version_string[1:]
 
-        tags = determine_tags(
-            version_string, app_env, include_major, include_extra_info
-        )
+        tags = determine_tags(version_string, app_env, include_major, include_suffix)
 
     elif version_type == "docker_from":
         is_app_name_empty(app_name)
@@ -95,9 +100,7 @@ def main():
         if "@" in version_string:
             version_string = version_string[: version_string.find("@")]
 
-        tags = determine_tags(
-            version_string, app_env, include_major, include_extra_info
-        )
+        tags = determine_tags(version_string, app_env, include_major, include_suffix)
 
     elif version_type == "date":
         version_string = date.today().strftime("%Y%m%d")
