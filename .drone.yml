@@ -13,6 +13,7 @@ steps:
       - poetry install
       - black --check $${APP_DIR}
       - flake8 $${APP_DIR}
+      - pytest
 
 trigger:
   event:
@@ -33,6 +34,7 @@ steps:
       - poetry install
       - black --check $${APP_DIR}
       - flake8 $${APP_DIR}
+      - pytest
 
 trigger:
   event:
