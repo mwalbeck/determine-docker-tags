@@ -41,6 +41,12 @@ def write_tags_to_file(tags):
         file.write(tags)
 
 
+def is_string_empty(string):
+    if not string or string.isspace():
+        return True
+    return False
+
+
 def is_app_name_empty(app_name):
     if not app_name or app_name.isspace():
         raise ValueError(
@@ -56,6 +62,7 @@ def main():
     custom_tags = os.getenv("CUSTOM_TAGS", "")
     include_major = os.getenv("INCLUDE_MAJOR", "yes")  # yes or no
     include_suffix = os.getenv("INCLUDE_SUFFIX", "yes")  # yes or no
+    include_without_app_env = os.getenv("INCLUDE_WITHOUT_APP_ENV", "no")  # yes or no
     include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "")  # DEPRECATED
 
     if include_extra_info and not include_extra_info.isspace():
@@ -73,6 +80,11 @@ def main():
         include_suffix = "yes"
     elif include_suffix == "negative":
         include_suffix = "no"
+
+    if include_without_app_env == "positive":
+        include_without_app_env = "yes"
+    elif include_without_app_env == "negative":
+        include_without_app_env = "no"
 
     if version_type == "docker_env":
         is_app_name_empty(app_name)
@@ -104,7 +116,8 @@ def main():
 
     elif version_type == "date":
         version_string = date.today().strftime("%Y%m%d")
-        tags = version_string
+
+        tags = determine_tags(version_string, app_env, include_major, include_suffix)
 
     elif custom_tags and not version_type:
         tags = custom_tags
@@ -113,6 +126,12 @@ def main():
     else:
         print("Please specify a VERSION_TYPE or set CUSTOM_TAGS.")
         exit(-1)
+
+    if not is_string_empty(app_env) and include_without_app_env == "yes":
+        app_env = ""
+        tags += "," + determine_tags(
+            version_string, app_env, include_major, include_suffix
+        )
 
     if custom_tags:
         tags += "," + custom_tags
