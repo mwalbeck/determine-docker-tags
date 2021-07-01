@@ -5,8 +5,13 @@ import re
 from datetime import date
 
 
-def determine_tags(version_string, app_env, include_major, include_suffix):
+def determine_tags(
+    version_string, app_env, include_major, include_suffix, version_passthrough
+):
     tags = ""
+
+    if version_passthrough == "yes":
+        return version_string
 
     if "-" in version_string:
         extra_info = version_string[version_string.find("-") :]
@@ -56,6 +61,7 @@ def main():
     custom_tags = os.getenv("CUSTOM_TAGS", "")
     include_major = os.getenv("INCLUDE_MAJOR", "yes")  # yes or no
     include_suffix = os.getenv("INCLUDE_SUFFIX", "yes")  # yes or no
+    version_passthrough = os.getenv("VERSION_PASSTHROUGH", "no")  # yes or no
     include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "")  # DEPRECATED
 
     if include_extra_info and not include_extra_info.isspace():
@@ -89,11 +95,17 @@ def main():
         if version_string[0] == "v":
             version_string = version_string[1:]
 
-        if "-" not in version_string and re.search(r"\d*\.\d*\.\d*\w*", version_string):
+        if (
+            "-" not in version_string
+            and version_passthrough == "no"
+            and re.search(r"\d*\.\d*\.\d*\w*", version_string)
+        ):
             split_version_string = re.split(r"(\d*\.\d*\.\d*)(\w*.*)", version_string)
             version_string = split_version_string[1] + "-" + split_version_string[2]
 
-        tags = determine_tags(version_string, app_env, include_major, include_suffix)
+        tags = determine_tags(
+            version_string, app_env, include_major, include_suffix, version_passthrough
+        )
 
     elif version_type == "docker_from":
         is_app_name_empty(app_name)
@@ -107,7 +119,9 @@ def main():
         if "@" in version_string:
             version_string = version_string[: version_string.find("@")]
 
-        tags = determine_tags(version_string, app_env, include_major, include_suffix)
+        tags = determine_tags(
+            version_string, app_env, include_major, include_suffix, version_passthrough
+        )
 
     elif version_type == "date":
         version_string = date.today().strftime("%Y%m%d")
