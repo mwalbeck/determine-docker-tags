@@ -5,9 +5,7 @@ description = "A small program to determine docker image tags"
 authors = ["Magnus Walbeck <magnus.walbeck@walbeck.it>"]
 readme = "README.md"
 repository = "https://git.walbeck.it/walbeck-it/determine-docker-tags"
-packages = [
-    { include = "determine_docker_tags" },
-]
+packages = [{ include="determine_docker_tags" }]
 
 [tool.poetry.scripts]
 determine-docker-tags = "determine_docker_tags.__init__:main"
