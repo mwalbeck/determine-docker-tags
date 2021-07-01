@@ -80,6 +80,11 @@ def main():
     elif include_suffix == "negative":
         include_suffix = "no"
 
+    if version_passthrough == "positive":
+        version_passthrough = "yes"
+    elif version_passthrough == "negative":
+        version_passthrough = "no"
+
     if version_type == "docker_env":
         is_app_name_empty(app_name)
 
