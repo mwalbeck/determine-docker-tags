@@ -79,12 +79,19 @@ def main():
 
         with open(dockerfile_path) as dockerfile:
             for line in dockerfile:
-                if re.search(rf"ENV {app_name}_VERSION .*", line):
+                if re.search(rf"ENV {app_name}_VERSION=.*", line):
+                    version_string = line[line.find("=", 4) + 1 :].strip()
+                    break
+                elif re.search(rf"ENV {app_name}_VERSION .*", line):
                     version_string = line[line.find(" ", 4) + 1 :].strip()
                     break
 
         if version_string[0] == "v":
             version_string = version_string[1:]
+
+        if "-" not in version_string and re.search(r"\d*\.\d*\.\d*\w*", version_string):
+            split_version_string = re.split(r"(\d*\.\d*\.\d*)(\w*.*)", version_string)
+            version_string = split_version_string[1] + "-" + split_version_string[2]
 
         tags = determine_tags(version_string, app_env, include_major, include_suffix)
 
