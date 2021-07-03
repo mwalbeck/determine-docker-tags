@@ -103,10 +103,14 @@ def main():
         if (
             "-" not in version_string
             and version_passthrough == "no"
-            and re.search(r"\d*\.\d*\.\d*\w*", version_string)
+            and re.fullmatch(r"v?\d+\.\d+\.\d+[A-Za-z_]{1}\w+", version_string)
         ):
-            split_version_string = re.split(r"(\d*\.\d*\.\d*)(\w*.*)", version_string)
-            version_string = split_version_string[1] + "-" + split_version_string[2]
+            split_version_string = re.split(
+                r"(\d+\.\d+\.\d+)([A-Za-z_]{1}.*)", version_string
+            )
+
+            if split_version_string[1] != "" and split_version_string[2] != "":
+                version_string = split_version_string[1] + "-" + split_version_string[2]
 
         tags = determine_tags(
             version_string, app_env, include_major, include_suffix, version_passthrough
