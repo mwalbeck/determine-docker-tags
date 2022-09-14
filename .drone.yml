@@ -5,7 +5,7 @@ name: test_python-3-8
 
 steps:
   - name: run tests
-    image: mwalbeck/python-poetry:1.1-3.8
+    image: mwalbeck/python-poetry:1.2-3.8
     environment:
       APP_DIR: determine_docker_tags
       POETRY_VIRTUALENVS_CREATE: "false"
@@ -26,7 +26,28 @@ name: test_python-3-9
 
 steps:
   - name: run tests
-    image: mwalbeck/python-poetry:1.1-3.9
+    image: mwalbeck/python-poetry:1.2-3.9
+    environment:
+      APP_DIR: determine_docker_tags
+      POETRY_VIRTUALENVS_CREATE: "false"
+    commands:
+      - poetry install
+      - black --check $${APP_DIR}
+      - flake8 $${APP_DIR}
+      - pytest
+
+trigger:
+  event:
+    - pull_request
+
+---
+kind: pipeline
+type: docker
+name: test_python-3-10
+
+steps:
+  - name: run tests
+    image: mwalbeck/python-poetry:1.2-3.10
     environment:
       APP_DIR: determine_docker_tags
       POETRY_VIRTUALENVS_CREATE: "false"
@@ -47,7 +68,7 @@ name: release
 
 steps:
   - name: release new version
-    image: mwalbeck/python-poetry:1.1-3.8
+    image: mwalbeck/python-poetry:1.2-3.8
     environment:
       POETRY_VIRTUALENVS_CREATE: "false"
       POETRY_PYPI_TOKEN_PYPI:
@@ -62,6 +83,6 @@ trigger:
 
 ---
 kind: signature
-hmac: f5d5cbdde7ea91d082ed9c16d217b1b1e3f1c892af775cdf7a795ac0c332ffb1
+hmac: 8db417c41ee71a6f40b190554c7bdde547fea15cffee3ae8adf5db850e993ea8
 
 ...
