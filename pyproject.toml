@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "determine-docker-tags"
-version = "0.2.3"
+version = "0.2.4"
 description = "A small program to determine docker image tags"
 authors = ["Magnus Walbeck <magnus.walbeck@walbeck.it>"]
 readme = "README.md"

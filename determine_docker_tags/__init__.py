@@ -42,6 +42,9 @@ def determine_tags(
 def write_tags_to_file(tags, path):
     print(tags)
 
+    if path != ".tags":
+        tags = "tags=" + tags
+
     with open(path, "w") as file:
         file.write(tags)
 
