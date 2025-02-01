@@ -10,9 +10,6 @@ def determine_tags(
 ):
     tags = ""
 
-    if image_name != "":
-        image_name = image_name + ":"
-
     if version_passthrough == "yes":
         return version_string
 
@@ -69,6 +66,9 @@ def main():
     include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "")  # DEPRECATED
     separator = os.getenv("SEPARATOR", ",")
     path = os.getenv("GITHUB_OUTPUT", ".tags")
+
+    if image_name != "":
+        image_name = image_name + ":"
 
     if include_extra_info and not include_extra_info.isspace():
         print(
@@ -151,7 +151,7 @@ def main():
         exit(-1)
 
     if custom_tags:
-        tags += "," + custom_tags
+        tags += separator + image_name + custom_tags
 
     write_tags_to_file(tags, path)
 
