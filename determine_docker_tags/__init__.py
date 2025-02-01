@@ -68,7 +68,7 @@ def main():
     version_passthrough = os.getenv("VERSION_PASSTHROUGH", "no")  # yes or no
     include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "")  # DEPRECATED
     separator = os.getenv("SEPARATOR", ",")
-    path = os.getenv("FILE_PATH", ".tags")
+    path = os.getenv("GITHUB_OUTPUT", ".tags")
 
     if image_name != "":
         image_name = image_name + ":"
