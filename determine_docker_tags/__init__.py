@@ -146,7 +146,7 @@ def main():
         tags = version_string
 
     elif custom_tags and not version_type:
-        tags = custom_tags
+        tags = image_name + custom_tags
         custom_tags = ""
 
     else:
