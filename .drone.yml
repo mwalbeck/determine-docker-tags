@@ -5,7 +5,7 @@ name: test_python-3-9
 
 steps:
   - name: run tests
-    image: mwalbeck/python-poetry:1-3.9
+    image: mwalbeck/python-poetry:2-3.9
     environment:
       APP_DIR: determine_docker_tags
       POETRY_VIRTUALENVS_CREATE: "false"
@@ -26,7 +26,7 @@ name: test_python-3-10
 
 steps:
   - name: run tests
-    image: mwalbeck/python-poetry:1-3.10
+    image: mwalbeck/python-poetry:2-3.10
     environment:
       APP_DIR: determine_docker_tags
       POETRY_VIRTUALENVS_CREATE: "false"
@@ -47,7 +47,7 @@ name: release
 
 steps:
   - name: release new version
-    image: mwalbeck/python-poetry:1-3.10
+    image: mwalbeck/python-poetry:2-3.10
     environment:
       POETRY_VIRTUALENVS_CREATE: "false"
       POETRY_PYPI_TOKEN_PYPI:
