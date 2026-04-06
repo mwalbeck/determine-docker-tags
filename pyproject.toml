@@ -1,24 +1,24 @@
-[tool.poetry]
+[project]
 name = "determine-docker-tags"
-version = "0.2.6"
+version = "0.3.0"
 description = "A small program to determine docker image tags"
-authors = ["Magnus Walbeck <magnus.walbeck@walbeck.it>"]
+authors = [
+    {name = "Magnus Walbeck",email = "magnus.walbeck@walbeck.it"}
+]
+license = "EUPL-1.2"
 readme = "README.md"
+requires-python = ">=3.10,<4.0"
 repository = "https://git.walbeck.it/walbeck-it/determine-docker-tags"
-packages = [{ include="determine_docker_tags" }]
 
-[tool.poetry.scripts]
+[project.scripts]
 determine-docker-tags = "determine_docker_tags.__init__:main"
 
-[tool.poetry.dependencies]
-python = "^3.7"
-
-[tool.poetry.dev-dependencies]
-black = "^20.8b1"
-flake8 = "^3.8.4"
-pytest = "^6.2.2"
-pytest-cov = "^2.11.1"
-
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "ruff (==0.15.9)",
+    "pytest (==9.0.2)"
+]

@@ -81,36 +81,36 @@ def test_determine_tags_with_suffix_app_env():
 
 
 def test_determine_tags_with_image_name():
-    assert determine_tags("1.18.0", "", "yes", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("1.18.0", "", "yes", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           ",") == "git.walbeck.it/walbeck-it/walbeck-it:1.18.0,git.walbeck.it/walbeck-it/walbeck-it:1.18,git.walbeck.it/walbeck-it/walbeck-it:1"
-    assert determine_tags("1.18.0", "", "yes", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("1.18.0", "", "yes", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           ",") == "git.walbeck.it/walbeck-it/walbeck-it:1.18.0,git.walbeck.it/walbeck-it/walbeck-it:1.18,git.walbeck.it/walbeck-it/walbeck-it:1"
-    assert determine_tags("1.18.0", "", "no", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("1.18.0", "", "no", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           ",") == "git.walbeck.it/walbeck-it/walbeck-it:1.18.0,git.walbeck.it/walbeck-it/walbeck-it:1.18"
-    assert determine_tags("1.18.0", "", "no", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("1.18.0", "", "no", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           ",") == "git.walbeck.it/walbeck-it/walbeck-it:1.18.0,git.walbeck.it/walbeck-it/walbeck-it:1.18"
 
-    assert determine_tags("thisisastring", "", "yes", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("thisisastring", "", "yes", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           ",") == "git.walbeck.it/walbeck-it/walbeck-it:thisisastring"
-    assert determine_tags("thisisastring", "", "yes", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("thisisastring", "", "yes", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           ",") == "git.walbeck.it/walbeck-it/walbeck-it:thisisastring"
-    assert determine_tags("thisisastring", "", "no", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it", ",") == ""
-    assert determine_tags("thisisastring", "", "no", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it", ",") == ""
+    assert determine_tags("thisisastring", "", "no", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it:", ",") == ""
+    assert determine_tags("thisisastring", "", "no", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it:", ",") == ""
 
 
 def test_determine_tags_with_image_name_and_separator():
-    assert determine_tags("1.18.0", "", "yes", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("1.18.0", "", "yes", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           "\n") == "git.walbeck.it/walbeck-it/walbeck-it:1.18.0\ngit.walbeck.it/walbeck-it/walbeck-it:1.18\ngit.walbeck.it/walbeck-it/walbeck-it:1"
-    assert determine_tags("1.18.0", "", "yes", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("1.18.0", "", "yes", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           "\n") == "git.walbeck.it/walbeck-it/walbeck-it:1.18.0\ngit.walbeck.it/walbeck-it/walbeck-it:1.18\ngit.walbeck.it/walbeck-it/walbeck-it:1"
-    assert determine_tags("1.18.0", "", "no", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("1.18.0", "", "no", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           "\n") == "git.walbeck.it/walbeck-it/walbeck-it:1.18.0\ngit.walbeck.it/walbeck-it/walbeck-it:1.18"
-    assert determine_tags("1.18.0", "", "no", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("1.18.0", "", "no", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           "\n") == "git.walbeck.it/walbeck-it/walbeck-it:1.18.0\ngit.walbeck.it/walbeck-it/walbeck-it:1.18"
 
-    assert determine_tags("thisisastring", "", "yes", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("thisisastring", "", "yes", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           "\n") == "git.walbeck.it/walbeck-it/walbeck-it:thisisastring"
-    assert determine_tags("thisisastring", "", "yes", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it",
+    assert determine_tags("thisisastring", "", "yes", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it:",
                           "\n") == "git.walbeck.it/walbeck-it/walbeck-it:thisisastring"
-    assert determine_tags("thisisastring", "", "no", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it", "\n") == ""
-    assert determine_tags("thisisastring", "", "no", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it", "\n") == ""
+    assert determine_tags("thisisastring", "", "no", "yes", "no", "git.walbeck.it/walbeck-it/walbeck-it:", "\n") == ""
+    assert determine_tags("thisisastring", "", "no", "no", "no", "git.walbeck.it/walbeck-it/walbeck-it:", "\n") == ""
