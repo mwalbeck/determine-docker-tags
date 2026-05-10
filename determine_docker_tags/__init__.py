@@ -137,7 +137,7 @@ def main():
 
     elif version_type == "date":
         version_string = date.today().strftime("%Y%m%d")
-        tags = version_string
+        tags = image_name + version_string
 
     elif version_type == "string":
         tags = determine_tags(
