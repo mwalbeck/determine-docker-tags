@@ -140,8 +140,14 @@ def main():
         tags = image_name + version_string
 
     elif version_type == "string":
+        if not string_version:
+            print("Please specify a STRING_VERSION.")
+            exit(-1)
+
+        version_string = string_version.lstrip("v")
+
         tags = determine_tags(
-            string_version, app_env, include_major, include_suffix, version_passthrough, image_name, separator
+            version_string, app_env, include_major, include_suffix, version_passthrough, image_name, separator
         )
 
     elif custom_tags and not version_type:
