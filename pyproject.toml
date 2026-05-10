@@ -1,6 +1,6 @@
 [project]
 name = "determine-docker-tags"
-version = "0.3.0"
+version = "0.4.0"
 description = "A small program to determine docker image tags"
 authors = [
     {name = "Magnus Walbeck",email = "magnus.walbeck@walbeck.it"}
