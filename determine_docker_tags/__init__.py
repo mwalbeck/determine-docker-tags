@@ -145,7 +145,11 @@ def main():
         )
 
     elif custom_tags and not version_type:
-        tags = image_name + custom_tags
+        tags = ""
+
+        for tag in custom_tags.split(","):
+            tags += separator + image_name + tag
+
         custom_tags = ""
 
     else:
@@ -153,7 +157,8 @@ def main():
         exit(-1)
 
     if custom_tags:
-        tags += separator + image_name + custom_tags
+        for tag in custom_tags.split(","):
+            tags += separator + image_name + tag
 
     write_tags_to_file(tags, path)
 
