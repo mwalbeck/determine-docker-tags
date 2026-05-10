@@ -57,7 +57,8 @@ def is_app_name_empty(app_name):
 
 
 def main():
-    version_type = os.getenv("VERSION_TYPE", "")  # docker_env, docker_from or date
+    version_type = os.getenv("VERSION_TYPE", "")  # docker_env, docker_from, date or string
+    string_version = os.getenv("STRING_VERSION", "") # Only used if VERSION_TYPE is string
     image_name = os.getenv("IMAGE_NAME", "")  # The full name and path of the image
     app_name = os.getenv("APP_NAME", "")
     dockerfile_path = os.getenv("DOCKERFILE_PATH", "Dockerfile")
@@ -67,7 +68,7 @@ def main():
     include_suffix = os.getenv("INCLUDE_SUFFIX", "yes")  # yes or no
     version_passthrough = os.getenv("VERSION_PASSTHROUGH", "no")  # yes or no
     separator = os.getenv("SEPARATOR", ",")
-    path = os.getenv("GITHUB_OUTPUT", ".tags")
+    path = os.getenv("FORGEJO_OUTPUT", os.getenv("GITHUB_OUTPUT", ".tags"))
 
     if image_name != "":
         image_name = image_name + ":"
@@ -137,6 +138,11 @@ def main():
     elif version_type == "date":
         version_string = date.today().strftime("%Y%m%d")
         tags = version_string
+
+    elif version_type == "string":
+        tags = determine_tags(
+            string_version, app_env, include_major, include_suffix, version_passthrough, image_name, separator
+        )
 
     elif custom_tags and not version_type:
         tags = image_name + custom_tags

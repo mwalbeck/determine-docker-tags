@@ -1,12 +1,12 @@
 # determine-docker-tags
 
-A python program used to determine which docker tags should be applied to a docker image depending on various factors. This is mainly intended to be used together with Drone CI to automatically figure out version tags before building a container image.
+A python program used to determine which docker tags should be applied to a docker image.
 
 ## Installation
 
-As this is mainly intended to be used with Drone CI there is a ready to go docker image on [Docker Hub](https://hub.docker.com/r/mwalbeck/determine-docker-tags). You can also find the source for the docker image [here](https://git.walbeck.it/walbeck-it/docker-determine-docker-tags).
+There is a ready-to-go docker image on [Docker Hub](https://hub.docker.com/r/mwalbeck/determine-docker-tags).
 
-If you're not interested in a docker image you can also find it on [PyPi](https://pypi.org/project/determine-docker-tags/) and it can easily be installed with:
+You can also find it on [PyPi](https://pypi.org/project/determine-docker-tags/) and it can easily be installed with:
 
 ```
 pip install determine-docker-tags
@@ -16,27 +16,34 @@ pip install determine-docker-tags
 
 Here is a list of the options available. You can find more detailed usage instructions below.
 
-| ENV Var         | Default      | Description                                                                                                                                                                                          |
-| --------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| VERSION_TYPE    | ""           | How the program should find the version number. Can be "docker_env", "docker_from", "date" or "".                                                                                                    |
-| APP_NAME        | ""           | The name of the application whose version number you want to use to generate tags.                                                                                                                   |
-| DOCKERFILE_PATH | "Dockerfile" | The path to the Dockerfile you want to run the program on                                                                                                                                            |
-| APP_ENV         | ""           | A static string to add to the end of every tag with a "-" added inbetween the tag and the string. The string will not be added to any tags defined in CUSTOM_TAGS.                                   |
-| CUSTOM_TAGS     | ""           | Any extra static tags you want to add to the image, for example "latest". You can provide a list in the form of a comma separated string to specify multiple tags. For example "latest,prod,example" |
-| INCLUDE_MAJOR   | "yes"        | If the major version number should be a tag. This setting will be ignored if the major version number is 0. Can be "yes" or "no".                                                                    |
-| INCLUDE_SUFFIX  | "yes"        | If the suffix that you find after the version number in many docker image tags should be kept and added to every tag. Can be "yes" or "no"                                                           |
+| ENV Var             | Default      | Description                                                                                                                                                                                          |
+|---------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| VERSION_TYPE        | ""           | How the program should find the version number. Can be "docker_env", "docker_from", "date", "string" or "".                                                                                          |
+| STRING_VERSION      | ""           | The version string to process when VERSION_TYPE is set to "string"                                                                                                                                   |
+| IMAGE_NAME          | ""           | The name of the docker image.                                                                                                                                                                        |
+| APP_NAME            | ""           | The name of the application whose version number you want to use to generate tags.                                                                                                                   |
+| DOCKERFILE_PATH     | "Dockerfile" | The path to the Dockerfile you want to run the program on                                                                                                                                            |
+| APP_ENV             | ""           | A static string to add to the end of every tag with a "-" added inbetween the tag and the string. The string will not be added to any tags defined in CUSTOM_TAGS.                                   |
+| CUSTOM_TAGS         | ""           | Any extra static tags you want to add to the image, for example "latest". You can provide a list in the form of a comma separated string to specify multiple tags. For example "latest,prod,example" |
+| INCLUDE_MAJOR       | "yes"        | If the major version number should be a tag. This setting will be ignored if the major version number is 0. Can be "yes" or "no".                                                                    |
+| INCLUDE_SUFFIX      | "yes"        | If the suffix that you find after the version number in many docker image tags should be kept and added to every tag. Can be "yes" or "no"                                                           |
+| VERSION_PASSTHROUGH | "no"         | If you want the string to be directly used as is, without any further processing. Applies to VERSION_TYPE "docker_env", "docker_from" and "string"                                                   |
 
 ## Usage
 
-The program is configured through environment variables. You can see the different options below. The program automatically figures out the version numbers to use as tags from a Dockerfile. The tags are put into a .tags file in the current workspace to be picked up by the drone docker plugin. This program is mainly intended to handle SemVer and may or may not work well with other versioning styles.
+The program is configured through environment variables. The program automatically figures out the version numbers to use as tags from a Dockerfile. The tags are written to FORGEJO_OUTPUT if it is set, otherwise to GITHUB_OUTPUT if it is set, otherwise to .tags in the current workspace.
 
 ### Version type
 
-To use the program you first need to figure out which `VERSION_TYPE` you want to use. There are four options to choose from. The default or an empty string requires `CUSTOM_TAGS` to be set and just creates a .tags file with the contents of `CUSTOM_TAGS`.
+To use the program you first need to figure out which `VERSION_TYPE` you want to use. There are five options to choose from. The default or an empty string requires `CUSTOM_TAGS` to be set and just creates a .tags file with the contents of `CUSTOM_TAGS`.
 
 #### date
 
 If `VERSION_TYPE` is set to `date` a tag will be created corresponding to the current date in format `YEARMONTHDAY` for example `20210101`. If `APP_ENV` is set it will currently be ignored using this `VERSION_TYPE`.
+
+#### string
+
+If `VERSION_TYPE` is set to `string` then the version string set in `STRING_VERSION` will be used to create the tags in the same way as the `docker_env` and `docker_from` version types. 
 
 #### docker_env
 
@@ -82,7 +89,7 @@ We then set `APP_NAME` to `nginx` and the generated tags would be:
 
 ### INCLUDE_MAJOR
 
-`INCLUDE_MAJOR` determine whether or not the major version number should have a tag of its own. The default for this option is `yes` If the major version number is `0` this option will be ignored and a tag with only the major version number won't be created. Let's say we had the version number `1.18.0` and `INCLUDE_MAJOR` is set to `no` then we would get the following tags:
+`INCLUDE_MAJOR` determine whether the major version number should have a tag of its own. The default for this option is `yes` If the major version number is `0` this option will be ignored and a tag with only the major version number won't be created. Let's say we had the version number `1.18.0` and `INCLUDE_MAJOR` is set to `no` then we would get the following tags:
 
 ```
 1.18,1.18.0
@@ -90,7 +97,7 @@ We then set `APP_NAME` to `nginx` and the generated tags would be:
 
 ### INCLUDE_SUFFIX
 
-`INCLUDE_SUFFIX` is mainly intended to be used with the `docker_from` version type. It determines whether or not the suffix should be included in the generated tags. The default for this option is `yes`. Let's say we had the following `FROM` instruction in our Dockerfile:
+`INCLUDE_SUFFIX` is mainly intended to be used with the `docker_from` version type. It determines whether the suffix should be included in the generated tags. The default for this option is `yes`. Let's say we had the following `FROM` instruction in our Dockerfile:
 
 ```
 FROM nginx:1.18.0-alpine
