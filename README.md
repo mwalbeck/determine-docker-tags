@@ -117,4 +117,4 @@ And if set to `no` the following tags would be generated:
 
 ## License
 
-This program is licensed under the GPLv3 or later.
+This program is licensed under the EUPL-v1.2.
