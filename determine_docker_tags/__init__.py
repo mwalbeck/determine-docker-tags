@@ -66,18 +66,11 @@ def main():
     include_major = os.getenv("INCLUDE_MAJOR", "yes")  # yes or no
     include_suffix = os.getenv("INCLUDE_SUFFIX", "yes")  # yes or no
     version_passthrough = os.getenv("VERSION_PASSTHROUGH", "no")  # yes or no
-    include_extra_info = os.getenv("INCLUDE_EXTRA_INFO", "")  # DEPRECATED
     separator = os.getenv("SEPARATOR", ",")
     path = os.getenv("GITHUB_OUTPUT", ".tags")
 
     if image_name != "":
         image_name = image_name + ":"
-
-    if include_extra_info and not include_extra_info.isspace():
-        print(
-            "DEPRECATION NOTICE: INCLUDE_EXTRA_INFO is deprecated. Please use INCLUDE_SUFFIX instead."
-        )
-        include_suffix = include_extra_info
 
     if include_major == "positive":
         include_major = "yes"
